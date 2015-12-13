@@ -16,6 +16,7 @@ def display_game_intro
   sleep 0.5
   prompt "Spock......"
   sleep 0.5
+  puts
 end
 
 def determine_winner(player, computer, name)
