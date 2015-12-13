@@ -8,7 +8,7 @@ puts numbers
 I would expect [1, 2, 3] because its returning an array of unique values.
 
 #2.) Describe the difference between ! and ? in Ruby. And explain what would happen in the following scenarios:
-1. what is ```ruby != ``` and where should you use it?
+1. what is ` != ` and where should you use it?
     
     Not equal to. Should be used in condition statements
 
