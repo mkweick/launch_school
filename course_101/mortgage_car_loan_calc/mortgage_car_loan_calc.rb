@@ -10,7 +10,7 @@ def valid_loan_amount?(loan, loan_type)
   end
 end
 
-def invalid_loan_msg(loan_type)
+def print_invalid_loan_msg(loan_type)
   if loan_type == '1'
     prompt "Mortgage must be greater than $19,999 and no decimals:"
   else
@@ -45,7 +45,7 @@ Are you calculating a Mortgage or Car Loan?
   prompt(loan_type == '1' ? "Mortgage amount?" : "Car loan amount?")
   loan_amount = gets.chomp
   until valid_loan_amount?(loan_amount, loan_type_name)
-    invalid_loan_msg(loan_type)
+    print_invalid_loan_msg(loan_type)
     loan_amount = gets.chomp
   end
 
