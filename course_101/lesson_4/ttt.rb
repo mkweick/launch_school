@@ -277,7 +277,7 @@ class Game
     play_again
   end
 
-  def play
+  def play_ttt
     loop do
       loop do
         board = Board.new
@@ -326,5 +326,5 @@ end
 
 Game.clear_screen
 Game.welcome_msg
-Game.new.play
+Game.new.play_ttt
 Game.goodbye_msg
