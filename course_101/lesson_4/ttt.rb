@@ -18,11 +18,8 @@ class Human < Players
 
   def initialize
     @name = human_name
-    Game.clear_screen
     @letter = human_letter
-    Game.clear_screen
     @color = human_color
-    Game.clear_screen
     @wins = 0
   end
 
@@ -38,6 +35,7 @@ class Human < Players
   end
 
   def human_letter
+    puts
     puts "Okay #{name}, would you like to play as X's or O's? (X/O)"
     letter = gets.chomp.upcase
     until %w(X O).include? letter
@@ -58,6 +56,7 @@ class Human < Players
   end
 
   def display_color_msg
+    puts
     puts "#{name} you are #{letter}'s. What color would you like to be? "\
          "(Computer is #{'Red'.colorize(:light_red)})"
     puts " 1 -- #{'Green'.colorize(:light_green)}"
@@ -127,7 +126,7 @@ class Board
     9.times { |n| @tiles << Tile.new((n + 1).to_s) }
   end
 
-  def print
+  def print_board
     Game.clear_screen
     puts
     puts " #{tiles[0].value} #{'|'.colorize(:light_yellow)}"\
@@ -202,6 +201,7 @@ class Game
   def initialize
     @human = Human.new
     @computer = Computer.new(human.letter)
+    Game.clear_screen
     display_intro
   end
 
@@ -282,7 +282,7 @@ class Game
       loop do
         board = Board.new
         Game.clear_screen
-        board.print
+        board.print_board
         play_round(board)
         print_result(board)
         update_series_wins(board)
@@ -299,10 +299,10 @@ class Game
     loop do
       break if board.winner? || board.full?
       human.move(board)
-      board.print
+      board.print_board
       break if board.winner? || board.full?
       computer.move(board, human.letter, human.color)
-      board.print
+      board.print_board
     end
   end
 
