@@ -164,7 +164,7 @@ class Board
 
   def get_smart_tiles(letter, color)
     smart_tiles = []
-    WINNING_LINES.any? do |line|
+    WINNING_LINES.each? do |line|
       if line_contains_two?(line, letter, color) && line_contains_open_tile?(line)
         tiles.values_at(*line).each do |tile|
           if VALID_TILES.include? tile.value
@@ -183,7 +183,7 @@ class Board
   end
 
   def full?
-    !tiles.any? { |tile| VALID_TILES.include? tile.value }
+    tiles.none? { |tile| VALID_TILES.include? tile.value }
   end
 end
 
