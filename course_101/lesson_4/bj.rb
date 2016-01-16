@@ -12,7 +12,6 @@ class Deck
     @cards = []
     @deck_count = num_decks
     build_deck
-    display_shuffle_msg
     shuffle
   end
   
@@ -35,32 +34,33 @@ class Deck
       end
     end
   end
+  
+  def deal
+    reshuffle if deck_empty?
+    cards.shift
+  end
+  
+  def deck_empty?
+    cards.count < 1
+  end
 
-  def display_shuffle_msg
+  def shuffle
+    display_shuffle_animation
+    cards.shuffle!
+  end
+
+  def reshuffle
+    build_deck
+    shuffle
+  end
+  
+  def display_shuffle_animation
     system 'clear'
     print "Shuffling Cards...."
     6.times do
       sleep 0.5
       print "...."
     end
-  end
-
-  def shuffle
-    cards.shuffle!
-  end
-
-  def deal
-    reshuffle if deck_empty?
-    cards.shift
-  end
-
-  def reshuffle
-    display_shuffle_msg
-    build_deck
-  end
-
-  def deck_empty?
-    cards.count < 1
   end
 end
 
@@ -127,10 +127,6 @@ class Dealer < Player
     @name = "Dealer"
     @hand = []
   end
-
-  def turn
-    
-  end
   
   def hide_dealer_card
     puts "\n#{name}:\n  #{hand.first}\n  ??"
@@ -145,11 +141,19 @@ class Game
     deck_count:         "\nHow many decks in this game? (Minimum of 3):",
     deck_count_error:   "\nMust play with a minimum of #{MIN_DECK_COUNT} decks:",
     deal_again:         "\nDeal again? (Y) or (N):",
+    dealer_blackjack:   "\nYOU LOST. Dealer has Blackjack.",
+    dealer_bust:        "\nYOU WON! Dealer Busted!",
     dealer_get_card:    "\nDealer is getting another card...",
+    dealer_high_score:  "\nYOU LOST. Dealer has higher score.",
     goodbye:            "\nThanks for playing Blackjack partner!",
     hit_or_stay:        "\n(H)it or (S)tay?",
+    player_blackjack:   "\nYOU WON! You have Blackjack!",
+    player_bust:        "\nYOU LOST. You Busted!",
+    player_high_score:  "\nYOU WON! You have higher score!",
     player_name:        "\nWhats your name?",
     player_name_error:  "Name can't be empty:",
+    tie_blackjack:      "\nTIE! Both have Blackjack.",
+    tie_score:          "\nTIE! Both have equal score.",
     welcome:            "\nWelcome to Blackjack Partner"
   }
 
@@ -164,62 +168,29 @@ class Game
     @deck = Deck.new
     @dealer_flag = false
   end
-
+  
   def self.display_msg(msg_key)
     puts "#{MESSAGES[msg_key]}"
   end
 
-  def clear_screen
-    system 'clear'
-  end
-
-  def initial_deal
-    self.dealer_flag = false
-    2.times do
-      player.deal_card(deck)
-      dealer.deal_card(deck)
-    end
-  end
-
-  def show_cards
-    clear_screen
-    dealer_flag ? (puts dealer) : (dealer.hide_dealer_card)
-    puts player
-  end
-
   def display_result
     if player.bust?
-      puts "\n#{player.name} LOST. You Busted!"
+      Game.display_msg(:player_bust)
     elsif dealer.bust?
-      puts "\n#{player.name} WON! Dealer Busted!"
+      Game.display_msg(:dealer_bust)
     elsif player.blackjack? && dealer.blackjack?
-      puts "\nTIE! Both have Blackjack."
+      Game.display_msg(:tie_blackjack)
     elsif player.blackjack?
-      puts "\n#{player.name} WON! You have Blackjack!"
+      Game.display_msg(:player_blackjack)
     elsif dealer.blackjack?
-      puts "\n#{player.name} LOST. Dealer has Blackjack."
+      Game.display_msg(:dealer_blackjack)
     elsif player.total == dealer.total
-      puts "\nTIE! Both have equal score."
+      Game.display_msg(:tie_score)
     elsif player.total > dealer.total
-      puts "\n#{player.name} WON! You have higher score!"
+      Game.display_msg(:player_high_score)
     else
-      puts "\n#{player.name} LOST. Dealer has higher score."
+      Game.display_msg(:dealer_high_score)
     end
-  end
-
-  def clear_hands
-    player.hand.clear
-    dealer.hand.clear
-  end
-
-  def deal_again?
-    Game.display_msg(:deal_again)
-    deal_again = gets.chomp.upcase
-    until %w(Y N).include? deal_again
-      Game.display_msg(:deal_again)
-      deal_again = gets.chomp.upcase
-    end
-    deal_again
   end
 
   def play
@@ -237,6 +208,21 @@ class Game
       break if deal_again? == 'N'
     end
     Game.display_msg(:goodbye)
+    puts "\nGoodbye #{player.name}!"
+  end
+  
+  def initial_deal
+    self.dealer_flag = false
+    2.times do
+      player.deal_card(deck)
+      dealer.deal_card(deck)
+    end
+  end
+
+  def show_cards
+    clear_screen
+    dealer_flag ? (puts dealer) : (dealer.hide_dealer_card)
+    puts player
   end
 
   def player_turn
@@ -259,6 +245,25 @@ class Game
       clear_screen
       show_cards
     end
+  end
+  
+  def clear_hands
+    player.hand.clear
+    dealer.hand.clear
+  end
+
+  def deal_again?
+    Game.display_msg(:deal_again)
+    deal_again = gets.chomp.upcase
+    until %w(Y N).include? deal_again
+      Game.display_msg(:deal_again)
+      deal_again = gets.chomp.upcase
+    end
+    deal_again
+  end
+
+  def clear_screen
+    system 'clear'
   end
 end
 
