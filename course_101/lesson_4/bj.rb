@@ -4,7 +4,7 @@ class Deck
                   "K" => 10, "A" => 11 }
   CARDS = %w(2 3 4 5 6 7 8 9 10 J Q K A)
   SUITS = %w(♥ ♦ ♠ ♣)
-  
+
   attr_reader :deck_count
   attr_accessor :cards
 
@@ -14,7 +14,7 @@ class Deck
     build_deck
     shuffle
   end
-  
+
   def num_decks
     Game.display_msg(:deck_count)
     num = gets.chomp.to_i
@@ -34,12 +34,12 @@ class Deck
       end
     end
   end
-  
+
   def deal
     reshuffle if deck_empty?
     cards.shift
   end
-  
+
   def deck_empty?
     cards.count < 1
   end
@@ -53,7 +53,7 @@ class Deck
     build_deck
     shuffle
   end
-  
+
   def display_shuffle_animation
     system 'clear'
     print "Shuffling Cards...."
@@ -71,7 +71,7 @@ class Player
     @name = player_name
     @hand = []
   end
-  
+
   def player_name
     Game.display_msg(:player_name)
     name = gets.chomp.capitalize
@@ -85,7 +85,7 @@ class Player
   def to_s
     "\n#{name.capitalize}:\n  #{hand.join("\n  ")}\nTotal = #{total}"
   end
-  
+
   def hit_or_stay
     Game.display_msg(:hit_or_stay)
     action = gets.chomp.upcase
@@ -127,7 +127,7 @@ class Dealer < Player
     @name = "Dealer"
     @hand = []
   end
-  
+
   def hide_dealer_card
     puts "\n#{name}:\n  #{hand.first}\n  ??"
   end
@@ -168,7 +168,7 @@ class Game
     @deck = Deck.new
     @dealer_flag = false
   end
-  
+
   def self.display_msg(msg_key)
     puts "#{MESSAGES[msg_key]}"
   end
@@ -210,7 +210,7 @@ class Game
     Game.display_msg(:goodbye)
     puts "\nGoodbye #{player.name}!"
   end
-  
+
   def initial_deal
     self.dealer_flag = false
     2.times do
@@ -246,7 +246,7 @@ class Game
       show_cards
     end
   end
-  
+
   def clear_hands
     player.hand.clear
     dealer.hand.clear
