@@ -174,19 +174,20 @@ class Game
   end
 
   def display_result
-    if player.bust?
+    case
+    when player.bust?
       Game.display_msg(:player_bust)
-    elsif dealer.bust?
+    when dealer.bust?
       Game.display_msg(:dealer_bust)
-    elsif player.blackjack? && dealer.blackjack?
+    when player.blackjack? && dealer.blackjack?
       Game.display_msg(:tie_blackjack)
-    elsif player.blackjack?
+    when player.blackjack?
       Game.display_msg(:player_blackjack)
-    elsif dealer.blackjack?
+    when dealer.blackjack?
       Game.display_msg(:dealer_blackjack)
-    elsif player.total == dealer.total
+    when player.total == dealer.total
       Game.display_msg(:tie_score)
-    elsif player.total > dealer.total
+    when player.total > dealer.total
       Game.display_msg(:player_high_score)
     else
       Game.display_msg(:dealer_high_score)
