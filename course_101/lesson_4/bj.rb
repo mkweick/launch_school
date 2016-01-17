@@ -2,7 +2,6 @@ class Deck
   CARD_VALUES = { "2" => 2, "3" => 3, "4" => 4, "5" => 5, "6" => 6, "7" => 7,
                   "8" => 8, "9" => 9, "10" => 10, "J" => 10, "Q" => 10,
                   "K" => 10, "A" => 11 }
-  CARDS = %w(2 3 4 5 6 7 8 9 10 J Q K A)
   SUITS = %w(♥ ♦ ♠ ♣)
 
   attr_reader :deck_count
@@ -28,7 +27,7 @@ class Deck
   def build_deck
     deck_count.times do
       SUITS.each do |suit|
-        CARDS.each do |card|
+        CARD_VALUES.keys.each do |card|
           cards << card + suit
         end
       end
@@ -96,7 +95,7 @@ class Player
     action
   end
 
-  def deal_card(deck)
+  def hit(deck)
     hand << deck.deal
   end
 
@@ -215,8 +214,8 @@ class Game
   def initial_deal
     self.dealer_flag = false
     2.times do
-      player.deal_card(deck)
-      dealer.deal_card(deck)
+      player.hit(deck)
+      dealer.hit(deck)
     end
   end
 
@@ -229,7 +228,7 @@ class Game
   def player_turn
     until player.blackjack? || player.bust?
       action = player.hit_or_stay
-      player.deal_card(deck) if action == 'H'
+      player.hit(deck) if action == 'H'
       clear_screen
       show_cards
       break if action == 'S'
@@ -242,7 +241,7 @@ class Game
     until dealer.total >= MUST_STAY_NUM
       Game.display_msg(:dealer_get_card)
       sleep 1.5
-      dealer.deal_card(deck)
+      dealer.hit(deck)
       clear_screen
       show_cards
     end
