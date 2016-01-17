@@ -1,3 +1,4 @@
+require 'pry'
 class Move
   include Comparable
   attr_reader :choice
@@ -9,24 +10,44 @@ class Move
   def <=>(opponent)
     if choice == opponent.choice
       0
-    elsif (choice == 'R'  && opponent.choice == 'S')  ||
-          (choice == 'R'  && opponent.choice == 'L')  ||
-          (choice == 'P'  && opponent.choice == 'R')  ||
-          (choice == 'P'  && opponent.choice == 'SP') ||
-          (choice == 'S'  && opponent.choice == 'P')  ||
-          (choice == 'S'  && opponent.choice == 'L')  ||
-          (choice == 'L'  && opponent.choice == 'P')  ||
-          (choice == 'L'  && opponent.choice == 'SP') ||
-          (choice == 'SP' && opponent.choice == 'S')  ||
-          (choice == 'SP' && opponent.choice == 'R')
+    elsif rock?     && opponent.scissors? ||
+          rock?     && opponent.lizard?   ||
+          paper?    && opponent.rock?     ||
+          paper?    && opponent.spock?    ||
+          scissors? && opponent.paper?    ||
+          scissors? && opponent.lizard?   ||
+          lizard?   && opponent.paper?    ||
+          lizard?   && opponent.spock?    ||
+          spock?    && opponent.scissors? ||
+          spock?    && opponent.rock?
       1
     else
       -1
     end
   end
+
+  def rock?
+    choice == 'R'
+  end
+
+  def paper?
+    choice == 'P'
+  end
+
+  def scissors?
+    choice == 'S'
+  end
+
+  def lizard?
+    choice == 'L'
+  end
+
+  def spock?
+    choice == 'SP'
+  end
 end
 
-class Players
+class Player
   CHOICES = { 'R' => "Rock", 'P' => "Paper", 'S' => "Scissors",
               'L' => "Lizard", 'SP' => "Spock" }
   attr_accessor :name, :move
@@ -36,7 +57,7 @@ class Players
   end
 end
 
-class Human < Players
+class Human < Player
   def initialize
     set_name
   end
@@ -62,7 +83,7 @@ class Human < Players
   end
 end
 
-class Computer < Players
+class Computer < Player
   STAR_WAR_NAMES = ['R2-D2', 'BB-8', 'C-3P0']
 
   def initialize
@@ -103,7 +124,7 @@ class Game
       computer.turn
       display_moves
       display_results(determine_winner)
-      break if play_again? == 'N'
+      break unless play_again?
     end
     Game.display_msg(:goodbye)
   end
@@ -171,7 +192,7 @@ class Game
       Game.display_msg(:play_again)
       play_again = gets.chomp.upcase
     end
-    play_again
+    play_again == 'Y'
   end
 
   def clear_screen
