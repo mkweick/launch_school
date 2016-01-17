@@ -1,5 +1,3 @@
-require 'pry'
-
 class Move
   include Comparable
   attr_reader :choice
