@@ -1,7 +1,7 @@
 <h2 class="content-subhead">Search</h2>
 
 <form action="/search" method="get">
-  <input name="query" type="text" value="<%= params[:query] %>" />
+  <input name="query" type="text" value="<%= params[:query] %>" <%= "autofocus" unless params[:query] %> />
   <input type="submit" value="Search" />
 </form>
 
